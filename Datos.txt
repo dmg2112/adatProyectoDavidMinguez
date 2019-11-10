@@ -1,0 +1,6 @@
+1;Aqualung;Jethro tull;1971;Progressive rock
+2;pe;pep;19;pepMEtal
+3;Grinding wheel;Overkill;2016;Thrash metal
+4;Wings of war;Overkill;2019;Thrash metal
+5;Zero Transmission;ghoul;2011;Crossover Death
+6;Blessed and Possesed;PowerWolf;2017;Power Metal

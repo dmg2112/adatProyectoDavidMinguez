@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+	<class name="Disco" table="inventario_hibernate">
+		<id name="id" type="int">
+			<column name="id" />
+			<generator class="increment" />
+		</id>
+
+		<property name="nombre" type="string">
+			<column name="nombre" length="30" not-null="true" />
+		</property>
+		<property name="artista" type="string">
+			<column name="artista" length="30" not-null="true" />
+		</property>
+		<property name="year" type="string">
+			<column name="fecha" length="30" not-null="true" />
+		</property>
+		<property name="genero" type="string">
+			<column name="genero" length="30" not-null="true" />
+		</property>
+		
+		
+		
+		
+	</class>
+
+</hibernate-mapping>
