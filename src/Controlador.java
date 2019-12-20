@@ -136,7 +136,9 @@ public class Controlador {
 		case "mongo":
 			mysql.aBBDD(mongo.getMongo());
 			break;
-			
+		case "server":
+			mysql.aBBDD(api.getServer());
+			break;
 		}
 		
 		
@@ -152,6 +154,9 @@ public class Controlador {
 			break;
 		case "mysql":
 			mongo.aMongo(mysql.getBBDD());
+			break;
+		case "server":
+			mongo.aMongo(api.getServer());
 			break;
 			
 		}
@@ -170,6 +175,9 @@ public class Controlador {
 		case "mysql":
 			fichero.aFichero(mysql.getBBDD());
 			break;
+		case "server":
+		fichero.aFichero(api.getServer());
+			break;
 			
 		}
 		
@@ -185,6 +193,10 @@ public class Controlador {
 			break;
 		case "mysql":
 			hibernate.AHib(mysql.getBBDD());
+			
+		case "server":
+			hibernate.AHib(api.getServer());
+			break;
 			
 		}
 		
@@ -203,7 +215,31 @@ public class Controlador {
 		case "mongo":
 			mongo.borraMongo();
 			break;
+		case "server":
+			api.delete();
+			break;
 			
+		}
+			
+		
+		
+	}
+	
+	public void aServer(String source) {
+		
+		switch(source) {
+		case "mysql": 
+			api.aServer(mysql.getBBDD());
+			break;
+		case "hib":
+			api.aServer(hibernate.getHib());
+			break;
+		case "fichero":
+			api.aServer(fichero.geFichero());
+			break;
+		case "mongo":
+			api.aServer(mongo.getMongo());
+			break;
 		}
 		
 	}

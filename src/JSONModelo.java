@@ -1,5 +1,8 @@
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.swing.table.DefaultTableModel;
 
@@ -10,7 +13,7 @@ import org.json.simple.JSONValue;
 public class JSONModelo {
 
 	ApiRequests encargadoPeticiones;
-	private String SERVER_PATH, GET_DISC, SET_Disco,UPDATE_Disco,DeleteDisco; // Datos de la conexion
+	private String SERVER_PATH, GET_DISC, SET_Disco,UPDATE_Disco,DeleteDisco,DeleteAll,addVarios; // Datos de la conexion
 	private Vista miVista;
 	private HashMap<Integer, Disco> listaServer;
 	private int id = 0;
@@ -24,6 +27,8 @@ public class JSONModelo {
 		SET_Disco = "escribirDisco.php";
 		UPDATE_Disco = "actualizarDisco.php";
 		DeleteDisco = "deleteDisco.php";
+		DeleteAll = "deleteAll.php";
+		addVarios = "escribirVarios.php";
 
 	}
 
@@ -250,6 +255,61 @@ public class JSONModelo {
 			System.exit(-1);
 		}
 	}
+	
+	
+	
+	
+	public void delete() {
+
+		try {
+			JSONObject objDisco = new JSONObject();
+			JSONObject objPeticion = new JSONObject();
+			
+		
+			
+
+			objPeticion.put("peticion", "deleteAll");
+			
+
+			String json = objPeticion.toJSONString();
+
+			String url = SERVER_PATH + DeleteAll;
+
+			String response = encargadoPeticiones.postRequest(url, json);
+
+			System.out.println(response.toString());
+
+			JSONObject respuesta = (JSONObject) JSONValue.parse(response.toString());
+
+			if (respuesta == null) { // Si hay algún error de parseo (json
+										// incorrecto porque hay algún caracter
+										// raro, etc.) la respuesta será null
+				System.out.println("El json recibido no es correcto. Finaliza la ejecución");
+
+				System.exit(-1);
+			} else { // El JSON recibido es correcto
+
+				// Sera "ok" si todo ha ido bien o "error" si hay algún problema
+				String estado = (String) respuesta.get("estado");
+				System.out.println(respuesta.toString());
+				if (estado.equals("ok")) {
+
+					cargarJSON();
+
+				} else {
+
+					miVista.alertErrorEscritura();
+
+				}
+			}
+		} catch (Exception e) {
+			System.out.println(
+					"Excepcion desconocida. Traza de error comentada en el método 'annadirJugador' de la clase JSON REMOTO");
+			// e.printStackTrace();
+			System.out.println("Fin ejecución");
+			System.exit(-1);
+		}
+	}
 
 
 	public void updateDisco(Disco auxDisc) {
@@ -309,6 +369,121 @@ public class JSONModelo {
 			System.out.println("Fin ejecución");
 			System.exit(-1);
 		}
+	}
+	
+
+	public void aServer(HashMap<Integer, Disco> lista) {
+
+		try {
+			
+			JSONObject objPeticion = new JSONObject();
+			JSONArray listaDiscos = new JSONArray();
+			
+		
+			
+
+			objPeticion.put("peticion", "addVarios");
+			
+			
+			
+			Iterator<?> it = lista.entrySet().iterator();
+			
+			while (it.hasNext()) {
+				Map.Entry<Integer, Disco> pair = (Entry<Integer, Disco>) it.next();
+				int id = pair.getKey();
+				Disco tmp = pair.getValue();
+				
+				if (!serverContiene(tmp)) {
+					JSONObject objDisco = new JSONObject();
+					
+					objDisco.put("nombre", tmp.getNombre());
+					objDisco.put("artista", tmp.getArtista());
+					objDisco.put("fecha", tmp.getYear());
+					objDisco.put("genero", tmp.getGenero());
+					
+					listaDiscos.add(objDisco);
+					
+					
+					
+					
+				}
+
+			}
+			if(listaDiscos.size()>0) {
+				
+				objPeticion.put("discos",listaDiscos);
+				
+				String json = objPeticion.toJSONString();
+
+				String url = SERVER_PATH + addVarios;
+				
+				
+
+				String response = encargadoPeticiones.postRequest(url, json);
+
+				System.out.println(response.toString());
+
+				JSONObject respuesta = (JSONObject) JSONValue.parse(response.toString());
+
+				if (respuesta == null) { // Si hay algún error de parseo (json
+											// incorrecto porque hay algún caracter
+											// raro, etc.) la respuesta será null
+					System.out.println("El json recibido no es correcto. Finaliza la ejecución");
+
+					System.exit(-1);
+				} else { // El JSON recibido es correcto
+
+					// Sera "ok" si todo ha ido bien o "error" si hay algún problema
+					String estado = (String) respuesta.get("estado");
+					
+					if (estado.equals("ok")) {
+
+						cargarJSON();
+						miVista.esServidor();
+
+					} else {
+
+						miVista.alertErrorEscritura();
+
+					}
+				}
+				
+			}
+			
+
+			
+		} catch (Exception e) {
+			System.out.println(
+					"Excepcion desconocida. Traza de error comentada en el método 'annadirJugador' de la clase JSON REMOTO");
+			 e.printStackTrace();
+			System.out.println("Fin ejecución");
+			System.exit(-1);
+		}
+	}
+
+	private boolean serverContiene(Disco tmp) {
+		
+		Boolean presente = false;
+		if(listaServer!=null ) {
+			Iterator it = listaServer.entrySet().iterator();
+			while (it.hasNext()) {
+				Map.Entry pair = (Map.Entry) it.next();
+				Disco temp = (Disco) pair.getValue();
+				if (tmp.hashCode() == tmp.hashCode()) {
+					presente = true;
+				}
+
+			}
+		}
+		
+
+		return presente;
+		
+	}
+
+	public HashMap<Integer, Disco> getServer() {
+		
+		return this.listaServer;
 	}
 
 }

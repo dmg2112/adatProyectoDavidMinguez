@@ -80,6 +80,7 @@ public class Vista extends JFrame {
 	private JButton btnABbdd;
 	private JButton btnAMongodb;
 	private JButton btnCargarServidor;
+	private JButton btnAServidor;
 
 	public void setControlador(Controlador control) {
 
@@ -346,6 +347,16 @@ public class Vista extends JFrame {
 		});
 		btnCargarServidor.setBounds(541, 30, 129, 23);
 		getContentPane().add(btnCargarServidor);
+		
+		btnAServidor = new JButton("A Servidor");
+		btnAServidor.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				control.aServer(source);
+				
+			}
+		});
+		btnAServidor.setBounds(541, 253, 129, 23);
+		getContentPane().add(btnAServidor);
 		this.esBBDD();
 
 	}
@@ -360,6 +371,7 @@ public class Vista extends JFrame {
 		this.btnAHibernate.setEnabled(true);
 		this.btnAMongodb.setEnabled(true);
 		this.btnCargarServidor.setEnabled(false);
+		this.btnAServidor.setEnabled(false);
 		source = "server";
 		
 	}
@@ -385,6 +397,7 @@ public class Vista extends JFrame {
 		this.btnAHibernate.setEnabled(true);
 		this.btnAMongodb.setEnabled(true);
 		this.btnCargarServidor.setEnabled(true);
+		this.btnAServidor.setEnabled(true);
 
 		source = "fichero";
 
@@ -402,6 +415,7 @@ public class Vista extends JFrame {
 		this.btnAHibernate.setEnabled(true);
 		this.btnAMongodb.setEnabled(true);
 		this.btnCargarServidor.setEnabled(true);
+		this.btnAServidor.setEnabled(true);
 		source = "mysql";
 		
 		
@@ -418,6 +432,7 @@ public class Vista extends JFrame {
 		this.btnAHibernate.setEnabled(false);
 		this.btnAMongodb.setEnabled(true);
 		this.btnCargarServidor.setEnabled(true);
+		this.btnAServidor.setEnabled(true);
 		source = "hib";
 		
 	}
@@ -432,6 +447,7 @@ public class Vista extends JFrame {
 		this.btnAHibernate.setEnabled(true);
 		this.btnAMongodb.setEnabled(false);
 		this.btnCargarServidor.setEnabled(true);
+		this.btnAServidor.setEnabled(true);
 		source = "mongo";
 		
 		
@@ -460,5 +476,4 @@ public class Vista extends JFrame {
 		this.tempDisc = null;
 		
 	}
-	
 }
