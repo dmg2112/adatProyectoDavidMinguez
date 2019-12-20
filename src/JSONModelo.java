@@ -24,7 +24,7 @@ public class JSONModelo {
 
 		SERVER_PATH = "http://localhost/PHPDOCS/InventarioDiscosServer/";
 		GET_DISC = "leeDiscos.php";
-		SET_Disco = "escribirJugador.php";
+		SET_Disco = "escribirDisco.php";
 
 	}
 
@@ -107,6 +107,9 @@ public class JSONModelo {
 							contenido[3] = fecha;
 							contenido[4] = genero;
 							miModelo.addRow(contenido);
+							if(id>this.id) {
+								this.id = id;
+							}
 							
 
 							
@@ -189,6 +192,7 @@ public class JSONModelo {
 				if (estado.equals("ok")) {
 
 					System.out.println("Almacenado jugador enviado por JSON Remoto");
+					cargarJSON();
 
 				} else { 
 					miVista.alertErrorEscritura();

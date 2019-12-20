@@ -87,7 +87,10 @@ public class Controlador {
 		case "mongo":
 			mongo.guardaMongo(tmp);
 			break;
-			
+		case "server":
+			api.anadirDisco(tmp);
+			break;
+		
 		}
 		
 	}
