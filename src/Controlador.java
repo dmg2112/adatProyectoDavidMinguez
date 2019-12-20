@@ -111,8 +111,15 @@ public class Controlador {
 		case "mongo":
 			mongo.editaMongo(tmp);
 			break;
+		case "server":
+			api.updateDisco(tmp);
+			break;
+		
+		
 			
 		}
+		
+		
 		
 	}
 

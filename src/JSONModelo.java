@@ -1,5 +1,4 @@
 
-
 import java.util.HashMap;
 
 import javax.swing.table.DefaultTableModel;
@@ -8,12 +7,10 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
-
-
 public class JSONModelo {
 
 	ApiRequests encargadoPeticiones;
-	private String SERVER_PATH, GET_DISC, SET_Disco; // Datos de la conexion
+	private String SERVER_PATH, GET_DISC, SET_Disco,UPDATE_Disco; // Datos de la conexion
 	private Vista miVista;
 	private HashMap<Integer, Disco> listaServer;
 	private int id = 0;
@@ -25,6 +22,7 @@ public class JSONModelo {
 		SERVER_PATH = "http://localhost/PHPDOCS/InventarioDiscosServer/";
 		GET_DISC = "leeDiscos.php";
 		SET_Disco = "escribirDisco.php";
+		UPDATE_Disco = "actualizarDisco.php";
 
 	}
 
@@ -40,16 +38,13 @@ public class JSONModelo {
 		contenido[2] = "Artista";
 		contenido[3] = "Fecha";
 		contenido[4] = "Genero";
-		
+
 		for (Object obj : contenido) {
 			miModelo.addColumn(obj);
-			
 
 		}
 
 		try {
-
-			
 
 			String url = SERVER_PATH + GET_DISC; // Sacadas de configuracion
 
@@ -70,9 +65,9 @@ public class JSONModelo {
 				System.exit(-1);
 			} else { // El JSON recibido es correcto
 				// Sera "ok" si todo ha ido bien o "error" si hay algún problema
-				String estado = (String) respuesta.get("estado"); 
+				String estado = (String) respuesta.get("estado");
 				// Si ok, obtenemos array de jugadores para recorrer y generar hashmap
-				if (estado.equals("ok")) { 
+				if (estado.equals("ok")) {
 					JSONArray array = (JSONArray) respuesta.get("discos");
 
 					if (array.size() > 0) {
@@ -83,7 +78,7 @@ public class JSONModelo {
 						String artista;
 						String fecha;
 						String genero;
-						
+
 						int id;
 
 						for (int i = 0; i < array.size(); i++) {
@@ -100,26 +95,21 @@ public class JSONModelo {
 							disc.setId(id);
 							disc.setNombre(nombre);
 							disc.setYear(fecha);
-							
+
 							contenido[0] = id;
 							contenido[1] = nombre;
 							contenido[2] = artista;
 							contenido[3] = fecha;
 							contenido[4] = genero;
 							miModelo.addRow(contenido);
-							if(id>this.id) {
+							if (id > this.id) {
 								this.id = id;
 							}
-							
-
-							
 
 							listaServer.put(id, disc);
 						}
 
-						
-
-					} 
+					}
 
 				} else { // Hemos recibido el json pero en el estado se nos
 							// indica que ha habido algún error
@@ -140,10 +130,9 @@ public class JSONModelo {
 
 			System.exit(-1);
 		}
-		
+
 		miVista.setTabla(miModelo);
 
-		
 	}
 
 	public void anadirDisco(Disco auxDisc) {
@@ -154,29 +143,23 @@ public class JSONModelo {
 
 			objDisco.put("nombre", auxDisc.getNombre());
 			objDisco.put("artista", auxDisc.getArtista());
-			objDisco.put("fecha", auxDisc);
-			objDisco.put("fecha", auxDisc);
+			objDisco.put("fecha", auxDisc.getYear());
+			objDisco.put("genero", auxDisc.getGenero());
 
 			// Tenemos el jugador como objeto JSON. Lo añadimos a una peticion
 			// Lo transformamos a string y llamamos al
 			// encargado de peticiones para que lo envie al PHP
 
 			objPeticion.put("peticion", "add");
-			objPeticion.put("jugadorAnnadir", objDisco);
-			
-			String json = objPeticion.toJSONString();
+			objPeticion.put("disco", objDisco);
 
-		
+			String json = objPeticion.toJSONString();
 
 			String url = SERVER_PATH + SET_Disco;
 
-		
-
 			String response = encargadoPeticiones.postRequest(url, json);
-			
-		
-			
-			
+
+			System.out.println(response.toString());
 
 			JSONObject respuesta = (JSONObject) JSONValue.parse(response.toString());
 
@@ -184,20 +167,20 @@ public class JSONModelo {
 										// incorrecto porque hay algún caracter
 										// raro, etc.) la respuesta será null
 				System.out.println("El json recibido no es correcto. Finaliza la ejecución");
+
 				System.exit(-1);
 			} else { // El JSON recibido es correcto
-				
+
 				// Sera "ok" si todo ha ido bien o "error" si hay algún problema
-				String estado = (String) respuesta.get("estado"); 
+				String estado = (String) respuesta.get("estado");
+				System.out.println(respuesta.toString());
 				if (estado.equals("ok")) {
 
-					System.out.println("Almacenado jugador enviado por JSON Remoto");
 					cargarJSON();
 
-				} else { 
-					miVista.alertErrorEscritura();
+				} else {
 
-					
+					miVista.alertErrorEscritura();
 
 				}
 			}
@@ -213,6 +196,67 @@ public class JSONModelo {
 
 	public void setMiVista(Vista miVista) {
 		this.miVista = miVista;
+	}
+
+
+
+	public void updateDisco(Disco auxDisc) {
+
+		try {
+			JSONObject objDisco = new JSONObject();
+			JSONObject objPeticion = new JSONObject();
+			
+			objDisco.put("id", auxDisc.getId());
+			objDisco.put("nombre", auxDisc.getNombre());
+			objDisco.put("artista", auxDisc.getArtista());
+			objDisco.put("fecha", auxDisc.getYear());
+			objDisco.put("genero", auxDisc.getGenero());
+
+			// Tenemos el jugador como objeto JSON. Lo añadimos a una peticion
+			// Lo transformamos a string y llamamos al
+			// encargado de peticiones para que lo envie al PHP
+
+			objPeticion.put("peticion", "update");
+			objPeticion.put("disco", objDisco);
+
+			String json = objPeticion.toJSONString();
+
+			String url = SERVER_PATH + UPDATE_Disco;
+
+			String response = encargadoPeticiones.postRequest(url, json);
+
+			System.out.println(response.toString());
+
+			JSONObject respuesta = (JSONObject) JSONValue.parse(response.toString());
+
+			if (respuesta == null) { // Si hay algún error de parseo (json
+										// incorrecto porque hay algún caracter
+										// raro, etc.) la respuesta será null
+				System.out.println("El json recibido no es correcto. Finaliza la ejecución");
+
+				System.exit(-1);
+			} else { // El JSON recibido es correcto
+
+				// Sera "ok" si todo ha ido bien o "error" si hay algún problema
+				String estado = (String) respuesta.get("estado");
+				System.out.println(respuesta.toString());
+				if (estado.equals("ok")) {
+
+					cargarJSON();
+
+				} else {
+
+					miVista.alertErrorEscritura();
+
+				}
+			}
+		} catch (Exception e) {
+			System.out.println(
+					"Excepcion desconocida. Traza de error comentada en el método 'annadirJugador' de la clase JSON REMOTO");
+			// e.printStackTrace();
+			System.out.println("Fin ejecución");
+			System.exit(-1);
+		}
 	}
 
 }
