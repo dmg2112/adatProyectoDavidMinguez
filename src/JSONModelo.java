@@ -2,39 +2,56 @@
 
 import java.util.HashMap;
 
+import javax.swing.table.DefaultTableModel;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
-import auxiliares.ApiRequests;
-import modelo.Jugador;
 
-public class AccesoJSONRemoto {
+
+public class JSONModelo {
 
 	ApiRequests encargadoPeticiones;
-	private String SERVER_PATH, GET_PLAYER, SET_PLAYER; // Datos de la conexion
+	private String SERVER_PATH, GET_DISC, SET_Disco; // Datos de la conexion
+	private Vista miVista;
+	private HashMap<Integer, Disco> listaServer;
+	private int id = 0;
 
-	public AccesoJSONRemoto() {
+	public JSONModelo() {
 
 		encargadoPeticiones = new ApiRequests();
 
-		SERVER_PATH = "http://localhost/PHPDOCS/BaloncestoJSONServer/";
-		GET_PLAYER = "leeJugadores.php";
-		SET_PLAYER = "escribirJugador.php";
+		SERVER_PATH = "http://localhost/PHPDOCS/InventarioDiscosServer/";
+		GET_DISC = "leeDiscos.php";
+		SET_Disco = "escribirJugador.php";
 
 	}
 
-	public HashMap<Integer, Jugador> lee() {
+	public void cargarJSON() {
+		DefaultTableModel miModelo = new DefaultTableModel();
+		listaServer = new HashMap<Integer, Disco>();
+		int numColumnas = 5;
 
-		HashMap<Integer, Jugador> auxhm = new HashMap<Integer, Jugador>();
+		Object[] contenido = new Object[numColumnas];
+
+		contenido[0] = "ID";
+		contenido[1] = "Nombre";
+		contenido[2] = "Artista";
+		contenido[3] = "Fecha";
+		contenido[4] = "Genero";
+		
+		for (Object obj : contenido) {
+			miModelo.addColumn(obj);
+			
+
+		}
 
 		try {
 
-			System.out.println("---------- Leemos datos de JSON --------------------");
+			
 
-			System.out.println("Lanzamos peticion JSON para jugadores");
-
-			String url = SERVER_PATH + GET_PLAYER; // Sacadas de configuracion
+			String url = SERVER_PATH + GET_DISC; // Sacadas de configuracion
 
 			// System.out.println("La url a la que lanzamos la petición es " +
 			// url); // Traza para pruebas
@@ -56,37 +73,50 @@ public class AccesoJSONRemoto {
 				String estado = (String) respuesta.get("estado"); 
 				// Si ok, obtenemos array de jugadores para recorrer y generar hashmap
 				if (estado.equals("ok")) { 
-					JSONArray array = (JSONArray) respuesta.get("jugadores");
+					JSONArray array = (JSONArray) respuesta.get("discos");
 
 					if (array.size() > 0) {
 
 						// Declaramos variables
-						Jugador nuevoJug;
+						Disco disc;
 						String nombre;
-						int equipo;
-						int numero;
+						String artista;
+						String fecha;
+						String genero;
+						
 						int id;
 
 						for (int i = 0; i < array.size(); i++) {
 							JSONObject row = (JSONObject) array.get(i);
 
 							nombre = row.get("nombre").toString();
-							numero = Integer.parseInt(row.get("numero").toString());
+							artista = row.get("artista").toString();
 							id = Integer.parseInt(row.get("id").toString());
-							equipo = Integer.parseInt(row.get("equipo").toString());
+							fecha = row.get("fecha").toString();
+							genero = row.get("genero").toString();
+							disc = new Disco();
+							disc.setArtista(artista);
+							disc.setGenero(genero);
+							disc.setId(id);
+							disc.setNombre(nombre);
+							disc.setYear(fecha);
+							
+							contenido[0] = id;
+							contenido[1] = nombre;
+							contenido[2] = artista;
+							contenido[3] = fecha;
+							contenido[4] = genero;
+							miModelo.addRow(contenido);
+							
 
-							nuevoJug = new Jugador(id, nombre, numero, equipo);
+							
 
-							auxhm.put(id, nuevoJug);
+							listaServer.put(id, disc);
 						}
 
-						System.out.println("Acceso JSON Remoto - Leidos datos correctamente y generado hashmap");
-						System.out.println();
+						
 
-					} else { // El array de jugadores está vacío
-						System.out.println("Acceso JSON Remoto - No hay datos que tratar");
-						System.out.println();
-					}
+					} 
 
 				} else { // Hemos recibido el json pero en el estado se nos
 							// indica que ha habido algún error
@@ -107,46 +137,42 @@ public class AccesoJSONRemoto {
 
 			System.exit(-1);
 		}
+		
+		miVista.setTabla(miModelo);
 
-		return auxhm;
+		
 	}
 
-	public void anadirJugadorJSON(Jugador auxJugador) {
+	public void anadirDisco(Disco auxDisc) {
 
 		try {
-			JSONObject objJugador = new JSONObject();
+			JSONObject objDisco = new JSONObject();
 			JSONObject objPeticion = new JSONObject();
 
-			objJugador.put("nombre", auxJugador.getNombre());
-			objJugador.put("equipo", auxJugador.getEquipo());
-			objJugador.put("numero", auxJugador.getNumero());
+			objDisco.put("nombre", auxDisc.getNombre());
+			objDisco.put("artista", auxDisc.getArtista());
+			objDisco.put("fecha", auxDisc);
+			objDisco.put("fecha", auxDisc);
 
 			// Tenemos el jugador como objeto JSON. Lo añadimos a una peticion
 			// Lo transformamos a string y llamamos al
 			// encargado de peticiones para que lo envie al PHP
 
 			objPeticion.put("peticion", "add");
-			objPeticion.put("jugadorAnnadir", objJugador);
+			objPeticion.put("jugadorAnnadir", objDisco);
 			
 			String json = objPeticion.toJSONString();
 
-			System.out.println("Lanzamos peticion JSON para almacenar un jugador");
+		
 
-			String url = SERVER_PATH + SET_PLAYER;
+			String url = SERVER_PATH + SET_Disco;
 
-			System.out.println("La url a la que lanzamos la petición es " + url);
-			System.out.println("El json que enviamos es: ");
-			System.out.println(json);
-			//System.exit(-1);
+		
 
 			String response = encargadoPeticiones.postRequest(url, json);
 			
-			System.out.println("El json que recibimos es: ");
+		
 			
-			System.out.println(response); // Traza para pruebas
-			System.exit(-1);
-			
-			// Parseamos la respuesta y la convertimos en un JSONObject
 			
 
 			JSONObject respuesta = (JSONObject) JSONValue.parse(response.toString());
@@ -164,14 +190,10 @@ public class AccesoJSONRemoto {
 
 					System.out.println("Almacenado jugador enviado por JSON Remoto");
 
-				} else { // Hemos recibido el json pero en el estado se nos
-							// indica que ha habido algún error
+				} else { 
+					miVista.alertErrorEscritura();
 
-					System.out.println("Acceso JSON REMOTO - Error al almacenar los datos");
-					System.out.println("Error: " + (String) respuesta.get("error"));
-					System.out.println("Consulta: " + (String) respuesta.get("query"));
-
-					System.exit(-1);
+					
 
 				}
 			}
@@ -183,6 +205,10 @@ public class AccesoJSONRemoto {
 			System.exit(-1);
 		}
 
+	}
+
+	public void setMiVista(Vista miVista) {
+		this.miVista = miVista;
 	}
 
 }

@@ -79,6 +79,7 @@ public class Vista extends JFrame {
 	private JButton btnAFichero;
 	private JButton btnABbdd;
 	private JButton btnAMongodb;
+	private JButton btnCargarServidor;
 
 	public void setControlador(Controlador control) {
 
@@ -332,8 +333,35 @@ public class Vista extends JFrame {
 		});
 		btnAMongodb.setBounds(680, 219, 129, 23);
 		getContentPane().add(btnAMongodb);
+		
+		btnCargarServidor = new JButton("Cargar Servidor");
+		btnCargarServidor.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				esServidor();
+				tablaDatos.clearSelection();
+				tempDisc = null;
+				control.cargaServer();
+				
+			}
+		});
+		btnCargarServidor.setBounds(541, 30, 129, 23);
+		getContentPane().add(btnCargarServidor);
 		this.esBBDD();
 
+	}
+
+	public void esServidor() {
+		this.btnCargarFichero.setEnabled(true);
+		this.btnCargarBbdd.setEnabled(true);
+		this.btnCargarMongodb.setEnabled(true);
+		this.btnCargarHibernate.setEnabled(true);
+		this.btnAFichero.setEnabled(true);
+		this.btnABbdd.setEnabled(true);
+		this.btnAHibernate.setEnabled(true);
+		this.btnAMongodb.setEnabled(true);
+		this.btnCargarServidor.setEnabled(false);
+		source = "server";
+		
 	}
 
 	protected void limpiaCuestionario() {
@@ -356,6 +384,7 @@ public class Vista extends JFrame {
 		this.btnABbdd.setEnabled(true);
 		this.btnAHibernate.setEnabled(true);
 		this.btnAMongodb.setEnabled(true);
+		this.btnCargarServidor.setEnabled(true);
 
 		source = "fichero";
 
@@ -372,6 +401,7 @@ public class Vista extends JFrame {
 		this.btnABbdd.setEnabled(false);
 		this.btnAHibernate.setEnabled(true);
 		this.btnAMongodb.setEnabled(true);
+		this.btnCargarServidor.setEnabled(true);
 		source = "mysql";
 		
 		
@@ -387,6 +417,7 @@ public class Vista extends JFrame {
 		this.btnABbdd.setEnabled(true);
 		this.btnAHibernate.setEnabled(false);
 		this.btnAMongodb.setEnabled(true);
+		this.btnCargarServidor.setEnabled(true);
 		source = "hib";
 		
 	}
@@ -400,6 +431,7 @@ public class Vista extends JFrame {
 		this.btnABbdd.setEnabled(true);
 		this.btnAHibernate.setEnabled(true);
 		this.btnAMongodb.setEnabled(false);
+		this.btnCargarServidor.setEnabled(true);
 		source = "mongo";
 		
 		
@@ -420,4 +452,13 @@ public class Vista extends JFrame {
 		
 		
 	}
+
+	public void alertErrorEscritura() {
+		JOptionPane.showMessageDialog(null,
+				"Error en la insercion, cancelando inserción");
+		this.limpiaCuestionario();
+		this.tempDisc = null;
+		
+	}
+	
 }

@@ -9,7 +9,7 @@ public class Controlador {
 	private FicheroModelo fichero;
 	private HibernateModelo hibernate;
 	private MongoModelo mongo;
-	
+	private JSONModelo api;
 
 	// NAVEGACION
 	public Controlador() {
@@ -43,7 +43,10 @@ public class Controlador {
 	public void setHibernate(HibernateModelo hibernate) {
 		this.hibernate = hibernate;
 	}
-
+	
+	public void cargaServer() {
+		api.cargarJSON();
+	}
 
 
 	public void cargaFichero() {
@@ -214,6 +217,12 @@ public class Controlador {
 			
 		}
 		
+	}
+
+
+
+	public void setApi(JSONModelo api) {
+		this.api = api;
 	}
 
 }
