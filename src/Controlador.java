@@ -224,10 +224,17 @@ public class Controlador {
 		case "mongo":
 			mongo.borraMongo(disco);
 			break;
+		case "server":
+			api.delete(disco);
+			break;
 			
 		}
 		
+	
+		
 	}
+		
+
 
 
 

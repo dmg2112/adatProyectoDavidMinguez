@@ -10,7 +10,7 @@ import org.json.simple.JSONValue;
 public class JSONModelo {
 
 	ApiRequests encargadoPeticiones;
-	private String SERVER_PATH, GET_DISC, SET_Disco,UPDATE_Disco; // Datos de la conexion
+	private String SERVER_PATH, GET_DISC, SET_Disco,UPDATE_Disco,DeleteDisco; // Datos de la conexion
 	private Vista miVista;
 	private HashMap<Integer, Disco> listaServer;
 	private int id = 0;
@@ -23,6 +23,7 @@ public class JSONModelo {
 		GET_DISC = "leeDiscos.php";
 		SET_Disco = "escribirDisco.php";
 		UPDATE_Disco = "actualizarDisco.php";
+		DeleteDisco = "deleteDisco.php";
 
 	}
 
@@ -198,6 +199,57 @@ public class JSONModelo {
 		this.miVista = miVista;
 	}
 
+	public void delete(Disco auxDisc) {
+
+		try {
+			JSONObject objDisco = new JSONObject();
+			JSONObject objPeticion = new JSONObject();
+			
+		
+			
+
+			objPeticion.put("peticion", "deleteOne");
+			objPeticion.put("id", auxDisc.getId());
+
+			String json = objPeticion.toJSONString();
+
+			String url = SERVER_PATH + DeleteDisco;
+
+			String response = encargadoPeticiones.postRequest(url, json);
+
+			System.out.println(response.toString());
+
+			JSONObject respuesta = (JSONObject) JSONValue.parse(response.toString());
+
+			if (respuesta == null) { // Si hay algún error de parseo (json
+										// incorrecto porque hay algún caracter
+										// raro, etc.) la respuesta será null
+				System.out.println("El json recibido no es correcto. Finaliza la ejecución");
+
+				System.exit(-1);
+			} else { // El JSON recibido es correcto
+
+				// Sera "ok" si todo ha ido bien o "error" si hay algún problema
+				String estado = (String) respuesta.get("estado");
+				System.out.println(respuesta.toString());
+				if (estado.equals("ok")) {
+
+					cargarJSON();
+
+				} else {
+
+					miVista.alertErrorEscritura();
+
+				}
+			}
+		} catch (Exception e) {
+			System.out.println(
+					"Excepcion desconocida. Traza de error comentada en el método 'annadirJugador' de la clase JSON REMOTO");
+			// e.printStackTrace();
+			System.out.println("Fin ejecución");
+			System.exit(-1);
+		}
+	}
 
 
 	public void updateDisco(Disco auxDisc) {
