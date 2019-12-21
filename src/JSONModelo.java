@@ -373,6 +373,7 @@ public class JSONModelo {
 	
 
 	public void aServer(HashMap<Integer, Disco> lista) {
+		miVista.esServidor();
 
 		try {
 			
