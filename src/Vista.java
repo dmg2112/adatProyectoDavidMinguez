@@ -476,4 +476,10 @@ public class Vista extends JFrame {
 		this.tempDisc = null;
 		
 	}
+
+	public void ocultaHibernate() {
+		btnAHibernate.setVisible(false);
+		btnCargarHibernate.setVisible(false);
+		
+	}
 }
