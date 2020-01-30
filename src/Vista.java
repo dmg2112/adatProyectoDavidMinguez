@@ -81,6 +81,8 @@ public class Vista extends JFrame {
 	private JButton btnAMongodb;
 	private JButton btnCargarServidor;
 	private JButton btnAServidor;
+	private JButton btnCargarNode;
+	private JButton btnANode;
 
 	public void setControlador(Controlador control) {
 
@@ -357,6 +359,29 @@ public class Vista extends JFrame {
 		});
 		btnAServidor.setBounds(541, 253, 129, 23);
 		getContentPane().add(btnAServidor);
+		
+		btnCargarNode = new JButton("Cargar Node");
+		btnCargarNode.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				esNode();
+				tablaDatos.clearSelection();
+				tempDisc = null;
+				control.cargarNode();
+				
+			}
+		});
+		btnCargarNode.setBounds(680, 29, 129, 25);
+		getContentPane().add(btnCargarNode);
+		
+		btnANode = new JButton("A node");
+		btnANode.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				control.aNode(source);
+				
+			}
+		});
+		btnANode.setBounds(680, 252, 129, 25);
+		getContentPane().add(btnANode);
 		this.esBBDD();
 
 	}
@@ -372,6 +397,8 @@ public class Vista extends JFrame {
 		this.btnAMongodb.setEnabled(true);
 		this.btnCargarServidor.setEnabled(false);
 		this.btnAServidor.setEnabled(false);
+		this.btnANode.setEnabled(true);
+		this.btnCargarNode.setEnabled(true);
 		source = "server";
 		
 	}
@@ -398,6 +425,8 @@ public class Vista extends JFrame {
 		this.btnAMongodb.setEnabled(true);
 		this.btnCargarServidor.setEnabled(true);
 		this.btnAServidor.setEnabled(true);
+		this.btnANode.setEnabled(true);
+		this.btnCargarNode.setEnabled(true);
 
 		source = "fichero";
 
@@ -416,6 +445,8 @@ public class Vista extends JFrame {
 		this.btnAMongodb.setEnabled(true);
 		this.btnCargarServidor.setEnabled(true);
 		this.btnAServidor.setEnabled(true);
+		this.btnANode.setEnabled(true);
+		this.btnCargarNode.setEnabled(true);
 		source = "mysql";
 		
 		
@@ -433,6 +464,8 @@ public class Vista extends JFrame {
 		this.btnAMongodb.setEnabled(true);
 		this.btnCargarServidor.setEnabled(true);
 		this.btnAServidor.setEnabled(true);
+		this.btnANode.setEnabled(true);
+		this.btnCargarNode.setEnabled(true);
 		source = "hib";
 		
 	}
@@ -448,6 +481,8 @@ public class Vista extends JFrame {
 		this.btnAMongodb.setEnabled(false);
 		this.btnCargarServidor.setEnabled(true);
 		this.btnAServidor.setEnabled(true);
+		this.btnANode.setEnabled(true);
+		this.btnCargarNode.setEnabled(true);
 		source = "mongo";
 		
 		
@@ -484,7 +519,19 @@ public class Vista extends JFrame {
 	}
 
 	public void esNode() {
-		
+		this.btnCargarFichero.setEnabled(true);
+		this.btnCargarBbdd.setEnabled(true);
+		this.btnCargarMongodb.setEnabled(true);
+		this.btnCargarHibernate.setEnabled(true);
+		this.btnAFichero.setEnabled(true);
+		this.btnABbdd.setEnabled(true);
+		this.btnAHibernate.setEnabled(true);
+		this.btnAMongodb.setEnabled(true);
+		this.btnCargarServidor.setEnabled(true);
+		this.btnAServidor.setEnabled(true);
+		this.btnANode.setEnabled(false);
+		this.btnCargarNode.setEnabled(false);
+		source = "node";
 		
 	}
 }

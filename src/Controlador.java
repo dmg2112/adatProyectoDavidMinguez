@@ -4,7 +4,7 @@ import java.util.List;
 import javax.swing.JFrame;
 
 public class Controlador {
-	
+
 	private Vista miVista;
 	private MySQLModelo mysql;
 	private FicheroModelo fichero;
@@ -17,8 +17,6 @@ public class Controlador {
 	public Controlador() {
 
 	}
-
-	
 
 	public void setVista(Vista vista) {
 		this.miVista = vista;
@@ -34,50 +32,44 @@ public class Controlador {
 		this.mysql = mysql;
 	}
 
-
-
 	public void setFichero(FicheroModelo fichero) {
 		this.fichero = fichero;
 	}
 
-
-
 	public void setHibernate(HibernateModelo hibernate) {
 		this.hibernate = hibernate;
 	}
-	
+
 	public void cargaServer() {
 		api.cargarJSON();
 	}
 
-
 	public void cargaFichero() {
 		fichero.cargarFichero();
-		
+
 	}
+
 	public void cargaSQL() {
 		this.mysql.cargarBBDD();
-		
+
 	}
+
 	public void cargaHib() {
 		this.hibernate.cargarHib();
-		
+
 	}
+
 	public void cargaMongo() {
 		this.mongo.cargaMongo();
 	}
-
-
 
 	public void setMongo(MongoModelo mongo) {
 		this.mongo = mongo;
 	}
 
-
-
 	public void guarda(String source, Disco tmp) {
-		switch(source) {
-		case "mysql": 
+		switch (source) {
+		case "mysql":
 			mysql.guardarBase(tmp);
 			break;
 		case "hib":
@@ -93,23 +85,18 @@ public class Controlador {
 			api.anadirDisco(tmp);
 			break;
 		case "node":
-			HashMap<Integer,Disco> tempMap = new HashMap<Integer,Disco>();
+			HashMap<Integer, Disco> tempMap = new HashMap<Integer, Disco>();
 			tempMap.put(tmp.getId(), tmp);
 			node.aServer(tempMap);
 			break;
-		
+
 		}
-		
-		
-		
-		
+
 	}
 
-
-
 	public void edita(String source, Disco tmp) {
-		switch(source) {
-		case "mysql": 
+		switch (source) {
+		case "mysql":
 			mysql.editaBBDD(tmp);
 			break;
 		case "hib":
@@ -124,19 +111,17 @@ public class Controlador {
 		case "server":
 			api.updateDisco(tmp);
 			break;
-		
-		
-			
+		case "node":
+
+			node.updateDisco(tmp);
+			break;
+
 		}
-		
-		
-		
+
 	}
 
-
-
 	public void aBBDD(String source) {
-		switch(source) {
+		switch (source) {
 		case "hib":
 			mysql.aBBDD(hibernate.getHib());
 			break;
@@ -149,13 +134,17 @@ public class Controlador {
 		case "server":
 			mysql.aBBDD(api.getServer());
 			break;
+		case "node":
+
+			mysql.aBBDD(node.getServer());
+			break;
+
 		}
-		
-		
+
 	}
-	
+
 	public void aMongo(String source) {
-		switch(source) {
+		switch (source) {
 		case "hib":
 			mongo.aMongo(hibernate.getHib());
 			break;
@@ -168,14 +157,16 @@ public class Controlador {
 		case "server":
 			mongo.aMongo(api.getServer());
 			break;
-			
+		case "node":
+			mongo.aMongo(node.getServer());
+			break;
+
 		}
-		
-		
+
 	}
-	
+
 	public void aFichero(String source) {
-		switch(source) {
+		switch (source) {
 		case "hib":
 			fichero.aFichero(hibernate.getHib());
 			break;
@@ -186,15 +177,18 @@ public class Controlador {
 			fichero.aFichero(mysql.getBBDD());
 			break;
 		case "server":
-		fichero.aFichero(api.getServer());
+			fichero.aFichero(api.getServer());
 			break;
-			
+		case "node":
+			fichero.aFichero(node.getServer());
+			break;
+
 		}
-		
+
 	}
-	
+
 	public void aHib(String source) {
-		switch(source) {
+		switch (source) {
 		case "fichero":
 			hibernate.AHib(fichero.geFichero());
 			break;
@@ -203,17 +197,18 @@ public class Controlador {
 			break;
 		case "mysql":
 			hibernate.AHib(mysql.getBBDD());
-			
+
 		case "server":
 			hibernate.AHib(api.getServer());
 			break;
-			
+
 		}
-		
+
 	}
+
 	public void borra(String source) {
-		switch(source) {
-		case "mysql": 
+		switch (source) {
+		case "mysql":
 			mysql.borraBBDD();
 			break;
 		case "hib":
@@ -228,17 +223,18 @@ public class Controlador {
 		case "server":
 			api.delete();
 			break;
-			
+		case "node":
+			node.delete();
+			break;
+
 		}
-			
-		
-		
+
 	}
-	
+
 	public void aServer(String source) {
-		
-		switch(source) {
-		case "mysql": 
+
+		switch (source) {
+		case "mysql":
 			api.aServer(mysql.getBBDD());
 			break;
 		case "hib":
@@ -250,15 +246,16 @@ public class Controlador {
 		case "mongo":
 			api.aServer(mongo.getMongo());
 			break;
+		case "node":
+			api.aServer(node.getServer());
+			break;
 		}
-		
+
 	}
 
-
-
 	public void borra(String source, Disco disco) {
-		switch(source) {
-		case "mysql": 
+		switch (source) {
+		case "mysql":
 			mysql.borraBBDD(disco.getId());
 			break;
 		case "hib":
@@ -273,25 +270,49 @@ public class Controlador {
 		case "server":
 			api.delete(disco);
 			break;
+		case "node":
+			node.delete(disco);
 			
+			break;
+		
+
 		}
-		
-	
-		
+
 	}
-		
+	
+	public void aNode(String source) {
 
+		switch (source) {
+		case "mysql":
+			node.aServer(mysql.getBBDD());
+			break;
+		case "hib":
+			node.aServer(hibernate.getHib());
+			break;
+		case "fichero":
+			node.aServer(fichero.geFichero());
+			break;
+		case "mongo":
+			node.aServer(mongo.getMongo());
+			break;
+		case "server":
+			node.aServer(api.getServer());
+			break;
+		}
 
-
+	}
 
 	public void setApi(JSONModelo api) {
 		this.api = api;
 	}
 
-
-
 	public void setNode(NodeModelo node) {
 		this.node = node;
+	}
+
+	public void cargarNode() {
+		this.node.cargarNode();
+		
 	}
 
 }

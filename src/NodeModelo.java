@@ -181,11 +181,7 @@ public class NodeModelo {
 				}
 			}
 		} catch (Exception e) {
-			System.out.println(
-					"Excepcion desconocida. Traza de error comentada en el método 'annadirJugador' de la clase JSON REMOTO");
-			// e.printStackTrace();
-			System.out.println("Fin ejecución");
-			System.exit(-1);
+			e.printStackTrace();
 		}
 	}
 	
@@ -267,7 +263,7 @@ public class NodeModelo {
 
 			String url = SERVER_PATH ;
 
-			String response = encargadoPeticiones.postRequest(url, json);
+			String response = encargadoPeticiones.putRequestNode(url, json);
 
 			System.out.println(response.toString());
 
@@ -305,92 +301,97 @@ public class NodeModelo {
 	
 
 	public void aServer(HashMap<Integer, Disco> lista) {
-		miVista.esServidor();
-
-		try {
-			
-			JSONObject objPeticion = new JSONObject();
-			JSONArray listaDiscos = new JSONArray();
-			
 		
-			
-
-			
-			
-			
-			Iterator<?> it = lista.entrySet().iterator();
-			
-			while (it.hasNext()) {
-				Map.Entry<Integer, Disco> pair = (Entry<Integer, Disco>) it.next();
-				int id = pair.getKey();
-				Disco tmp = pair.getValue();
+		
+		if(lista.size() > 0) {
+			try {
 				
-				if (!serverContiene(tmp)) {
-					JSONObject objDisco = new JSONObject();
-					
-					objDisco.put("name", tmp.getNombre());
-					objDisco.put("artist", tmp.getArtista());
-					objDisco.put("date", tmp.getYear());
-					objDisco.put("genre", tmp.getGenero());
-					
-					listaDiscos.add(objDisco);
-					
-					
-					
-					
-				}
-
-			}
-			if(listaDiscos.size()>0) {
+				JSONObject objPeticion = new JSONObject();
+				JSONArray listaDiscos = new JSONArray();
 				
-				objPeticion.put("discos",listaDiscos);
-				
-				String json = objPeticion.toJSONString();
-
-				String url = SERVER_PATH ;
-				
+			
 				
 
-				String response = encargadoPeticiones.postRequestNode(url, json);
-
-				System.out.println(response.toString());
-
-				JSONObject respuesta = (JSONObject) JSONValue.parse(response.toString());
-
-				if (respuesta == null) { // Si hay algún error de parseo (json
-											// incorrecto porque hay algún caracter
-											// raro, etc.) la respuesta será null
-					System.out.println("El json recibido no es correcto. Finaliza la ejecución");
-
-					System.exit(-1);
-				} else { // El JSON recibido es correcto
-
-					// Sera "ok" si todo ha ido bien o "error" si hay algún problema
-					String estado = (String) respuesta.get("estado");
+				
+				
+				
+				Iterator<?> it = lista.entrySet().iterator();
+				
+				while (it.hasNext()) {
+					Map.Entry<Integer, Disco> pair = (Entry<Integer, Disco>) it.next();
+					int id = pair.getKey();
+					Disco tmp = pair.getValue();
 					
-					if (estado.equals("ok")) {
-
-						cargarNode();
-						miVista.esNode();
-
-					} else {
-
-						miVista.alertErrorEscritura();
-
+					if (!serverContiene(tmp)) {
+						JSONObject objDisco = new JSONObject();
+						
+						objDisco.put("name", tmp.getNombre());
+						objDisco.put("artist", tmp.getArtista());
+						objDisco.put("date", tmp.getYear());
+						objDisco.put("genre", tmp.getGenero());
+						
+						listaDiscos.add(objDisco);
+						
+						
+						
+						
 					}
+
+				}
+				if(listaDiscos.size()>0) {
+					
+					objPeticion.put("discos",listaDiscos);
+					
+					String json = objPeticion.toJSONString();
+
+					String url = SERVER_PATH ;
+					
+					
+
+					String response = encargadoPeticiones.postRequestNode(url, json);
+
+					System.out.println(response.toString());
+
+					JSONObject respuesta = (JSONObject) JSONValue.parse(response.toString());
+
+					if (respuesta == null) { // Si hay algún error de parseo (json
+												// incorrecto porque hay algún caracter
+												// raro, etc.) la respuesta será null
+						System.out.println("El json recibido no es correcto. Finaliza la ejecución");
+
+						System.exit(-1);
+					} else { // El JSON recibido es correcto
+
+						// Sera "ok" si todo ha ido bien o "error" si hay algún problema
+						String estado = (String) respuesta.get("estado");
+						
+						if (estado.equals("ok")) {
+
+							cargarNode();
+							
+
+						} else {
+
+							miVista.alertErrorEscritura();
+
+						}
+					}
+					
 				}
 				
-			}
-			
 
-			
-		} catch (Exception e) {
-			System.out.println(
-					"Excepcion desconocida. Traza de error comentada en el método 'annadirJugador' de la clase JSON REMOTO");
-			 e.printStackTrace();
-			System.out.println("Fin ejecución");
-			System.exit(-1);
+				
+			} catch (Exception e) {
+				System.out.println(
+						"Excepcion desconocida. Traza de error comentada en el método 'annadirJugador' de la clase JSON REMOTO");
+				 e.printStackTrace();
+				System.out.println("Fin ejecución");
+				System.exit(-1);
+			}
 		}
+		cargarNode();
+
+		
 	}
 
 	private boolean serverContiene(Disco tmp) {

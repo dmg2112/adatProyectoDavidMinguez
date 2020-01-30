@@ -33,6 +33,7 @@ public class Main {
 
 		miControl.setVista(miVista);
 		miControl.setFichero(fichero);
+		node.setMiVista(miVista);
 	
 		miControl.setMysql(mysql);
 		miControl.setMongo(mongo);

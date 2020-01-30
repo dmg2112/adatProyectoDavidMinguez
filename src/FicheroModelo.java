@@ -252,6 +252,7 @@ public class FicheroModelo {
 
 	}
 	public HashMap<Integer,Disco> geFichero(){
+		
 		return listaFichero;
 	}
 
