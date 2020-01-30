@@ -25,6 +25,7 @@ public class ApiRequests {
     public String getRequest(String url) throws IOException {
         Request request= new Request.Builder()
                 .url(url)
+                .get()
                 .build();
 
         Response response = client.newCall(request).execute();
@@ -50,6 +51,43 @@ public class ApiRequests {
 
         return response.body().string();
     }
+    
+    public String postRequestNode(String url, String json) throws IOException{
+        RequestBody body = RequestBody.create(JSON, json);
+        Request request = new Request.Builder().header("Content-Type", "application/json; charset=utf-8")
+                .url(url)
+                .post(body)
+                .build();
+
+        Response response = client.newCall(request).execute();
+
+        return response.body().string();
+    }
+    
+    public String deleteRequestNode(String url, String json) throws IOException{
+        RequestBody body = RequestBody.create(JSON, json);
+        Request request = new Request.Builder().header("Content-Type", "application/json; charset=utf-8")
+                .url(url)
+                .delete(body)
+                .build();
+
+        Response response = client.newCall(request).execute();
+
+        return response.body().string();
+    }
+    
+    public String putRequestNode(String url, String json) throws IOException{
+        RequestBody body = RequestBody.create(JSON, json);
+        Request request = new Request.Builder().header("Content-Type", "application/json; charset=utf-8")
+                .url(url)
+                .put(body)
+                .build();
+
+        Response response = client.newCall(request).execute();
+
+        return response.body().string();
+    }
+
 
     /**
      * Metodo usado para hacer una peticion POST mandando el json por un parametro llamado json
