@@ -1,4 +1,5 @@
 import java.awt.Dimension;
+import java.util.HashMap;
 import java.util.List;
 import javax.swing.JFrame;
 
@@ -10,6 +11,7 @@ public class Controlador {
 	private HibernateModelo hibernate;
 	private MongoModelo mongo;
 	private JSONModelo api;
+	private NodeModelo node;
 
 	// NAVEGACION
 	public Controlador() {
@@ -90,8 +92,16 @@ public class Controlador {
 		case "server":
 			api.anadirDisco(tmp);
 			break;
+		case "node":
+			HashMap<Integer,Disco> tempMap = new HashMap<Integer,Disco>();
+			tempMap.put(tmp.getId(), tmp);
+			node.aServer(tempMap);
+			break;
 		
 		}
+		
+		
+		
 		
 	}
 
@@ -276,6 +286,12 @@ public class Controlador {
 
 	public void setApi(JSONModelo api) {
 		this.api = api;
+	}
+
+
+
+	public void setNode(NodeModelo node) {
+		this.node = node;
 	}
 
 }

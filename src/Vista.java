@@ -482,4 +482,9 @@ public class Vista extends JFrame {
 		btnCargarHibernate.setVisible(false);
 		
 	}
+
+	public void esNode() {
+		
+		
+	}
 }

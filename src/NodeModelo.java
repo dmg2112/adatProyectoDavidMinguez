@@ -371,7 +371,7 @@ public class NodeModelo {
 					if (estado.equals("ok")) {
 
 						cargarNode();
-						miVista.esServidor();
+						miVista.esNode();
 
 					} else {
 

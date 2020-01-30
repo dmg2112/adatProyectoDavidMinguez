@@ -13,10 +13,12 @@ public class Main {
 		MongoModelo mongo = new MongoModelo();
 		
 		JSONModelo api = new JSONModelo();
+		NodeModelo node= new NodeModelo();
 		try {
 			HibernateModelo  hibernate = new HibernateModelo();
 			hibernate.setVista(miVista);
 			miControl.setHibernate(hibernate);
+			miControl.setNode(node);
 			
 		} catch (Exception e) {
 			miVista.ocultaHibernate();
