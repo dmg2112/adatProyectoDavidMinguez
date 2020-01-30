@@ -153,7 +153,7 @@ public class NodeModelo {
 
 			String url = SERVER_PATH;
 
-			String response = encargadoPeticiones.postRequest(url, json);
+			String response = encargadoPeticiones.deleteRequestNode(url, json);
 
 			System.out.println(response.toString());
 
@@ -208,8 +208,7 @@ public class NodeModelo {
 
 			String url = SERVER_PATH ;
 
-			String response = encargadoPeticiones.postRequest(url, json);
-
+			String response = encargadoPeticiones.deleteRequestNode(url, json);
 			System.out.println(response.toString());
 
 			JSONObject respuesta = (JSONObject) JSONValue.parse(response.toString());
@@ -252,16 +251,16 @@ public class NodeModelo {
 			JSONObject objPeticion = new JSONObject();
 			
 			objDisco.put("id", auxDisc.getId());
-			objDisco.put("nombre", auxDisc.getNombre());
-			objDisco.put("artista", auxDisc.getArtista());
-			objDisco.put("fecha", auxDisc.getYear());
-			objDisco.put("genero", auxDisc.getGenero());
+			objDisco.put("name", auxDisc.getNombre());
+			objDisco.put("artist", auxDisc.getArtista());
+			objDisco.put("genre", auxDisc.getYear());
+			objDisco.put("id", auxDisc.getGenero());
 
 			// Tenemos el jugador como objeto JSON. Lo añadimos a una peticion
 			// Lo transformamos a string y llamamos al
 			// encargado de peticiones para que lo envie al PHP
 
-			objPeticion.put("peticion", "update");
+			
 			objPeticion.put("disco", objDisco);
 
 			String json = objPeticion.toJSONString();
@@ -316,7 +315,6 @@ public class NodeModelo {
 		
 			
 
-			objPeticion.put("peticion", "addVarios");
 			
 			
 			
@@ -330,10 +328,10 @@ public class NodeModelo {
 				if (!serverContiene(tmp)) {
 					JSONObject objDisco = new JSONObject();
 					
-					objDisco.put("nombre", tmp.getNombre());
-					objDisco.put("artista", tmp.getArtista());
-					objDisco.put("fecha", tmp.getYear());
-					objDisco.put("genero", tmp.getGenero());
+					objDisco.put("name", tmp.getNombre());
+					objDisco.put("artist", tmp.getArtista());
+					objDisco.put("date", tmp.getYear());
+					objDisco.put("genre", tmp.getGenero());
 					
 					listaDiscos.add(objDisco);
 					
@@ -353,7 +351,7 @@ public class NodeModelo {
 				
 				
 
-				String response = encargadoPeticiones.postRequest(url, json);
+				String response = encargadoPeticiones.postRequestNode(url, json);
 
 				System.out.println(response.toString());
 
